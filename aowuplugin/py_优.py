@@ -290,8 +290,8 @@ class Spider(Spider):
     def getinfo(self,params):
         i = self.getvinfo(params)
         jdata=i['nodes'][0]['nodes'][3]
-        if i['data']['extra']['showCategory']=='电影':
-            jdata = i['nodes'][0]['nodes'][4]
         info=i['data']['extra']['episodeTotal']
+        if i['data']['extra']['showCategory'] in ['电影','游戏']:
+            jdata = i['nodes'][0]['nodes'][4]
         return jdata,info
 
