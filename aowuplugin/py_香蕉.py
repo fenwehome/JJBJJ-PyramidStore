@@ -48,6 +48,7 @@ class Spider(Spider):
                         'n': list(first_two.values())[1]
                     })
                 ft.append(filter_item)
+        filters['0']=ft
         for k in data['data']['categories']:
             classes.append({
                 'type_name': k['catename'],
