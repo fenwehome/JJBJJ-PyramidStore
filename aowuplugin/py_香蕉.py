@@ -102,6 +102,7 @@ class Spider(Spider):
                     'vod_pic': i['coverpic'],
                     'vod_year': i.get('duration'),
                     'vod_remarks': i.get('catename'),
+                    'style': {"type": "rect", "ratio": 1.33}
                 })
         return vlist
 
