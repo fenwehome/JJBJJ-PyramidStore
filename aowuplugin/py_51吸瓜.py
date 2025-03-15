@@ -50,7 +50,7 @@ class Spider(Spider):
     }
 
     def homeContent(self, filter):
-        data=pq(self.fetch(self.host, headers=self.headers).text)
+        data=self.getpq(self.fetch(self.host, headers=self.headers).text)
         result = {}
         classes = []
         for k in data('.category-list ul li').items():
@@ -66,7 +66,7 @@ class Spider(Spider):
         pass
 
     def categoryContent(self, tid, pg, filter, extend):
-        data=pq(self.fetch(f"{self.host}{tid}{pg}", headers=self.headers).text)
+        data=self.getpq(self.fetch(f"{self.host}{tid}{pg}", headers=self.headers).text)
         result = {}
         result['list'] = self.getlist(data('#archive article a'))
         result['page'] = pg
@@ -77,7 +77,7 @@ class Spider(Spider):
 
     def detailContent(self, ids):
         url=f"{self.host}{ids[0]}"
-        data=pq(self.fetch(url, headers=self.headers).text)
+        data=self.getpq(self.fetch(url, headers=self.headers).text)
         vod = {
             'vod_content': data('.post-title').text(),
             'vod_play_from': '51吸瓜',
@@ -95,7 +95,7 @@ class Spider(Spider):
         return {'list':[vod]}
 
     def searchContent(self, key, quick, pg="1"):
-        data=pq(self.fetch(f"{self.host}/search/{key}/{pg}", headers=self.headers).text)
+        data=self.getpq(self.fetch(f"{self.host}/search/{key}/{pg}", headers=self.headers).text)
         return {'list':self.getlist(data('#archive article a')),'page':pg}
 
     def playerContent(self, flag, id, vipFlags):
@@ -120,7 +120,7 @@ class Spider(Spider):
         return [200,res.headers.get('Content-Type'),self.aesimg(res.content)]
 
     def get_domains(self):
-        html = pq(self.fetch("https://51cg.fun", headers=self.headers).text)
+        html = self.getpq(self.fetch("https://51cg.fun", headers=self.headers).text)
         html_pattern = r"Base64\.decode\('([^']+)'\)"
         html_match = re.search(html_pattern, html('script').eq(-1).text(), re.DOTALL)
         if not html_match:
@@ -205,3 +205,9 @@ class Spider(Spider):
         decrypted = unpad(cipher.decrypt(word), AES.block_size)
         return decrypted
 
+    def getpq(self, data):
+        try:
+            return pq(data)
+        except Exception as e:
+            print(f"{str(e)}")
+            return pq(data.encode('utf-8'))
