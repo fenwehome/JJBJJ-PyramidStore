@@ -177,12 +177,15 @@ class Spider(Spider):
     def getlist(self,data):
         videos = []
         for k in data.items():
-            if k.attr('href'):
+            a=k.attr('href')
+            b=k('h2').text()
+            c=k('span[itemprop="datePublished"]').text()
+            if a and b and c:
                 videos.append({
-                    'vod_id': k.attr('href'),
-                    'vod_name': k('h2').text().replace('\n', ' '),
+                    'vod_id': a,
+                    'vod_name': b.replace('\n', ' '),
                     'vod_pic': self.getimg(k('script').text()),
-                    'vod_remarks': k('span[itemprop="datePublished"]').text(),
+                    'vod_remarks': c,
                     'style': {"type": "rect", "ratio": 1.33}
                 })
         return videos
