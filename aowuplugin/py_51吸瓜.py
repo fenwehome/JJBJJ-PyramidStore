@@ -84,6 +84,16 @@ class Spider(Spider):
             'vod_play_url': f"请停止活塞运动，可能没有视频${url}"
         }
         try:
+            clist = []
+            if data('.tags .keywords a'):
+                for k in data('.tags .keywords a').items():
+                    title = k.text()
+                    href = k.attr('href')
+                    clist.append('[a=cr:' + json.dumps({'id': href, 'name': title}) + '/]' + title + '[/a]')
+            vod['vod_content'] = ' '.join(clist)
+        except:
+            pass
+        try:
             plist=[]
             if data('.dplayer'):
                 for c, k in enumerate(data('.dplayer').items(), start=1):
